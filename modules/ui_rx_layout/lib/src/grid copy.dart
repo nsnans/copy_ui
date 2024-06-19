@@ -19,7 +19,7 @@ enum RxJustify {
 
 class BRow extends StatelessWidget {
   final List<BCol> cols;
-  final Op<double>? gutter;
+  final Op<num>? gutter;
   final Op<double>? verticalGutter;
   final Op<EdgeInsetsGeometry>? padding;
   final RxAlign align;
@@ -46,7 +46,7 @@ class BRow extends StatelessWidget {
 
   Widget _buildLayout(Rx type, double maxWidth) {
     List<Widget> children = [];
-    double gutter = this.gutter?.call(type) ?? 0;
+    num gutter = this.gutter?.call(type) ?? 0;
     double runSpacing = verticalGutter?.call(type) ?? 0;
     double? ph = padding?.call(type).horizontal ?? 0;
 

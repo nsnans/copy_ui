@@ -23,8 +23,8 @@ class BSizedBox extends StatelessWidget {
     return WindowRespondBuilder(
       builder: (BuildContext context, Rx type) {
         return SizedBox(
-          width: getRxObj(width ?? {}, defaultWidth ?? 0.0)[type],
-          height: getRxObj(height, defaultHeight ?? 0.0)[type],
+          width: getRxObj(width ?? {}, defaultWidth ?? 0)[type],
+          height: getRxObj(height, defaultHeight ?? 0)[type],
           child: child,
         );
       },
