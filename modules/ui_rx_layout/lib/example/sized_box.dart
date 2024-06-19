@@ -105,7 +105,7 @@ class _MyHomePageState extends State<MyHomePage> {
           // action in the IDE, or press "p" in the console), to see the
           // wireframe for each widget.
           mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[LayoutDemo6()],
+          children: <Widget>[LayoutDemo9()],
         ),
       ),
       floatingActionButton: FloatingActionButton(
@@ -117,54 +117,24 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 }
 
-class LayoutDemo6 extends StatelessWidget {
-  const LayoutDemo6({super.key});
+class LayoutDemo9 extends StatelessWidget {
+  const LayoutDemo9({super.key});
 
   @override
   Widget build(BuildContext context) {
-    const Color color1 = Color(0xffd3dce6);
-    const Color color2 = Color(0xffe5e9f2);
-    return Column(
-        children: RxAlign.values
-            .map((e) => BRow(
-                    align: e,
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 12, vertical: 6)
-                            .rx,
-                    cols: [
-                      BCol(
-                          span: 6.rx,
-                          child: const Box(
-                            color: color1,
-                            height: 20,
-                          )),
-                      BCol(
-                          span: 4.rx,
-                          child: const Box(color: color2, height: 42)),
-                      BCol(
-                          span: 8.rx,
-                          child: const Box(color: color1, height: 52)),
-                      BCol(span: 6.rx, child: const Box(color: color2)),
-                    ]))
-            .toList());
-  }
-}
-
-class Box extends StatelessWidget {
-  final Color color;
-  final String? text;
-  final double height;
-
-  const Box({super.key, required this.color, this.text, this.height = 32});
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      height: height,
-      alignment: Alignment.center,
-      decoration:
-          BoxDecoration(color: color, borderRadius: BorderRadius.circular(4)),
-      child: text != null ? Text(text!) : null,
+    return const ColoredBox(
+      color: Color(0xffd3dce6),
+      child: BSizedBox(
+        width: {
+          Rx.xs: 400,
+          Rx.xl: 200,
+        },
+        height: {
+          Rx.xs: 400,
+          Rx.xl: 200,
+        },
+        child: Center(child: Text("宽高根据屏幕尺寸变化的盒子")),
+      ),
     );
   }
 }

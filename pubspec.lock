@@ -192,6 +192,13 @@ packages:
       url: "https://pub.flutter-io.cn"
     source: hosted
     version: "0.7.0"
+  ui_rx_layout:
+    dependency: "direct main"
+    description:
+      path: "modules/ui_rx_layout"
+      relative: true
+    source: path
+    version: "0.0.1"
   vector_math:
     dependency: transitive
     description:
@@ -209,5 +216,5 @@ packages:
     source: hosted
     version: "14.2.1"
 sdks:
-  dart: ">=3.3.4 <4.0.0"
+  dart: ">=3.4.3 <4.0.0"
   flutter: ">=3.18.0-18.0.pre.54"
