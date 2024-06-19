@@ -23,7 +23,7 @@ jobs:
       - name: Build
         run: |
          flutter pub get
-         flutter build web --web-renderer canvaskit
+         flutter build web --web-renderer canvaskit --base-href="/copy_ui/"
 
       # 部署到 GitHub Pages
       - name: Deploy
