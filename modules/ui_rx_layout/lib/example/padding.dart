@@ -105,7 +105,7 @@ class _MyHomePageState extends State<MyHomePage> {
           // action in the IDE, or press "p" in the console), to see the
           // wireframe for each widget.
           mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[LayoutDemo4()],
+          children: <Widget>[LayoutDemo10()],
         ),
       ),
       floatingActionButton: FloatingActionButton(
@@ -117,45 +117,27 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 }
 
-class LayoutDemo4 extends StatelessWidget {
-  const LayoutDemo4({super.key});
+class LayoutDemo10 extends StatelessWidget {
+  const LayoutDemo10({super.key});
 
   @override
   Widget build(BuildContext context) {
-    const Color color1 = Color(0xffd3dce6);
-    const Color color2 = Color(0xffe5e9f2);
-    return CRow(
-        gutter: 16.0.rx,
-        verticalGutter: 12.0.rx,
-        padding: const EdgeInsets.symmetric(horizontal: 40).rx,
-        cols: [
-          CCol(span: 6.rx, child: const Box(color: color1, text: 'Toly')),
-          CCol(span: 5.rx, child: const Box(color: color2, text: 'UI')),
-          CCol(span: 7.rx, child: const Box(color: color1, text: 'Responsive')),
-          CCol(span: 6.rx, child: const Box(color: color2, text: 'Layout')),
-          CCol(span: 11.rx, child: const Box(color: color2, text: '11')),
-          CCol(span: 4.rx, child: const Box(color: color2, text: '4')),
-          CCol(span: 3.rx, child: const Box(color: color2, text: '3')),
-          CCol(span: 6.rx, child: const Box(color: color2, text: '6')),
-        ]);
-  }
-}
-
-class Box extends StatelessWidget {
-  final Color color;
-  final String? text;
-  final double height;
-
-  const Box({super.key, required this.color, this.text, this.height = 32});
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      height: height,
-      alignment: Alignment.center,
-      decoration:
-          BoxDecoration(color: color, borderRadius: BorderRadius.circular(4)),
-      child: text != null ? Text(text!) : null,
-    );
+    return ColoredBox(
+        color: const Color(0xffd3dce6),
+        child: SizedBox(
+          width: 300,
+          height: 150,
+          child: BPadding(
+            defaultPadding: EdgeInsets.zero,
+            padding: const {
+              Rx.xs: EdgeInsets.symmetric(horizontal: 30, vertical: 50),
+              Rx.lg: EdgeInsets.symmetric(horizontal: 20, vertical: 40),
+            },
+            child: Container(
+                color: Colors.orange.withOpacity(0.6),
+                alignment: Alignment.center,
+                child: const Text("边距根据屏幕尺寸变化")),
+          ),
+        ));
   }
 }
