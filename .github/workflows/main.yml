@@ -30,5 +30,5 @@ jobs:
         uses: JamesIves/github-pages-deploy-action@v4
         with:
           token: ${{ secrets.ACCESS_TOKEN }} 
-          branch: page # 部署到 page 分支，因为 main 分支存放的一般是源码，而 page 分支则用来存放生成的静态文件
+          branch: page
           folder: build/web 
