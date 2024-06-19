@@ -19,18 +19,28 @@ enum RxJustify {
 
 class BRow extends StatelessWidget {
   final List<BCol> cols;
-  final Op<double>? gutter;
-  final Op<double>? verticalGutter;
-  final Op<EdgeInsetsGeometry>? padding;
+  final Map<Rx, double> gutter;
+  final double defaultGutter;
+
+  final Map<Rx, double> verticalGutter;
+  final double defaultVerticalGutter;
+
+  final Map<Rx, EdgeInsetsGeometry> padding;
+  final EdgeInsetsGeometry defaultPadding;
+
   final RxAlign align;
   final RxJustify justify;
 
   const BRow({
     super.key,
     required this.cols,
-    this.gutter,
-    this.padding,
-    this.verticalGutter,
+    this.gutter = const {},
+    this.defaultGutter = 0,
+    this.padding = const {},
+    this.defaultPadding =
+        const EdgeInsets.symmetric(horizontal: 0, vertical: 0),
+    this.verticalGutter = const {},
+    this.defaultVerticalGutter = 0,
     this.justify = RxJustify.start,
     this.align = RxAlign.top,
   });
@@ -46,9 +56,13 @@ class BRow extends StatelessWidget {
 
   Widget _buildLayout(Rx type, double maxWidth) {
     List<Widget> children = [];
-    double gutter = this.gutter?.call(type) ?? 0;
-    double runSpacing = verticalGutter?.call(type) ?? 0;
-    double? ph = padding?.call(type).horizontal ?? 0;
+    double gutter = getRxObj(this.gutter, defaultGutter)[type]!;
+
+    double runSpacing = getRxObj(verticalGutter, defaultVerticalGutter)[type]!;
+
+    EdgeInsetsGeometry padding = getRxObj(this.padding, defaultPadding)[type]!;
+
+    double? ph = padding.horizontal;
 
     double unit = (maxWidth - 0.000001 - ph) / 24;
     unit -= gutter - gutter / 24;
@@ -57,10 +71,11 @@ class BRow extends StatelessWidget {
       BCol col = cols[i];
       Widget child = col.child;
 
-      int span = col.span?.call(type) ?? 0;
-      int offset = col.offset?.call(type) ?? 0;
-      int push = col.push?.call(type) ?? 0;
-      int pull = col.pull?.call(type) ?? 0;
+      int span = getRxObj(col.span, col.defaultSpan)[type]!;
+      int offset = getRxObj(col.offset, col.defaultOffset)[type]!;
+      int push = getRxObj(col.push, col.defaultPush)[type]!;
+      int pull = getRxObj(col.pull, col.defaultPull)[type]!;
+
       int dx = push - pull;
       if (span != 0) {
         child = SizedBox(
@@ -94,28 +109,38 @@ class BRow extends StatelessWidget {
       crossAxisAlignment: WrapCrossAlignment.values[align.index],
       children: children,
     );
-    if (padding != null) {
-      result = Padding(
-        padding: padding!(type),
-        child: result,
-      );
-    }
+    result = Padding(
+      padding: padding,
+      child: result,
+    );
     return SizedBox(width: maxWidth, child: result);
   }
 }
 
 class BCol {
-  final Op<int>? span;
-  final Op<int>? push;
-  final Op<int>? offset;
-  final Op<int>? pull;
+  final Map<Rx, int> span;
+  final int? defaultSpan;
+
+  final Map<Rx, int> push;
+  final int defaultPush;
+
+  final Map<Rx, int> offset;
+  final int defaultOffset;
+
+  final Map<Rx, int> pull;
+  final int defaultPull;
+
   final Widget child;
 
   BCol({
-    this.span,
-    this.offset,
-    this.push,
-    this.pull,
+    this.span = const {},
+    this.offset = const {},
+    this.push = const {},
+    this.pull = const {},
+    this.defaultSpan = 0,
+    this.defaultPush = 0,
+    this.defaultOffset = 0,
+    this.defaultPull = 0,
     required this.child,
   });
 }

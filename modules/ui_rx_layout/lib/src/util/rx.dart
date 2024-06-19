@@ -39,8 +39,3 @@ Map<Rx, T> getRxObj<T>(Map<Rx, T> widths, T defaultValue) {
   return obj;
 }
 
-typedef Op<T> = T Function(Rx re);
-
-extension RxT<T> on T {
-  Op<T> get rx => (Rx re) => this;
-}

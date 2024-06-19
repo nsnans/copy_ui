@@ -17,15 +17,15 @@ enum RxJustify {
   spaceEvenly,
 }
 
-class BRow extends StatelessWidget {
-  final List<BCol> cols;
+class CRow extends StatelessWidget {
+  final List<CCol> cols;
   final Op<num>? gutter;
   final Op<double>? verticalGutter;
   final Op<EdgeInsetsGeometry>? padding;
   final RxAlign align;
   final RxJustify justify;
 
-  const BRow({
+  const CRow({
     super.key,
     required this.cols,
     this.gutter,
@@ -54,7 +54,7 @@ class BRow extends StatelessWidget {
     unit -= gutter - gutter / 24;
 
     for (int i = 0; i < cols.length; i++) {
-      BCol col = cols[i];
+      CCol col = cols[i];
       Widget child = col.child;
 
       int span = col.span?.call(type) ?? 0;
@@ -104,18 +104,24 @@ class BRow extends StatelessWidget {
   }
 }
 
-class BCol {
+class CCol {
   final Op<int>? span;
   final Op<int>? push;
   final Op<int>? offset;
   final Op<int>? pull;
   final Widget child;
 
-  BCol({
+  CCol({
     this.span,
     this.offset,
     this.push,
     this.pull,
     required this.child,
   });
+}
+
+typedef Op<T> = T Function(Rx re);
+
+extension RxT<T> on T {
+  Op<T> get rx => (Rx re) => this;
 }

@@ -3,16 +3,17 @@ import 'package:flutter/material.dart';
 import './util/index.dart';
 
 class BPadding extends StatelessWidget {
-  final Map<Rx, EdgeInsetsGeometry>? padding;
-  final EdgeInsetsGeometry? defaultPadding;
+  final Map<Rx, EdgeInsetsGeometry> padding;
+  final EdgeInsetsGeometry defaultPadding;
 
   final Widget? child;
 
   const BPadding({
     super.key,
     this.child,
-    this.defaultPadding,
-    required this.padding,
+    this.defaultPadding =
+        const EdgeInsets.symmetric(horizontal: 0, vertical: 0),
+    this.padding = const {},
   });
 
   @override
@@ -20,9 +21,8 @@ class BPadding extends StatelessWidget {
     return WindowRespondBuilder(
       builder: (BuildContext context, Rx type) {
         var p = getRxObj(
-          padding ?? {},
-          defaultPadding ??
-              const EdgeInsets.symmetric(horizontal: 0, vertical: 0),
+          padding,
+          defaultPadding,
         );
 
         return Padding(
