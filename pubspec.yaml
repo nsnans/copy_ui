@@ -33,6 +33,11 @@ dependencies:
 
   ui_rx_layout:
     path: modules/ui_rx_layout
+  ui_tooltip:
+    path: modules/ui_tooltip
+  ui_popover:
+    path: modules/ui_popover
+
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
