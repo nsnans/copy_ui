@@ -33,23 +33,15 @@ fi
 echo "合并分支 $branch_name 到主分支 main..."
 git merge $branch_name
 if [ $? -ne 0 ]; then
-  if git ls-files -u | grep -q "^"; then
-    echo "检测到冲突。请解决冲突后继续。"
-    echo "解决冲突后，运行以下命令继续合并："
-    echo "  git add <解决冲突的文件>"
-    echo "  $0 $branch_name"
-    exit 1
-  else
-    echo "合并失败，未知错误。"
-    exit 1
-  fi
+  echo "错误：合并分支 $branch_name 到主分支 main 失败。请解决冲突后再尝试。"
+  echo "请解决冲突后运行 'git add <解决冲突的文件>' 来标记解决，之后运行脚本继续操作。"
+  exit 1
 fi
 
 # 检查是否有未解决的冲突
 if git ls-files -u | grep -q "^"; then
   echo "检测到冲突。请解决冲突后继续。"
   echo "解决冲突后，运行以下命令继续合并："
-  echo "  git add <解决冲突的文件>"
   echo "  git commit"
   echo "  $0 $branch_name"
   exit 1
