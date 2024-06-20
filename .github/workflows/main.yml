@@ -8,13 +8,18 @@ on:
     branches: [ "main" ]
     types:
       - closed  # 只在 PR 合并或关闭时触发
+    paths-ignore:  # 忽略以下路径的变更
+    - '**.md' 
+    - '**.txt'  
+    - '.github/**'  
+    - '.idea/**' 
+    - '!.github/workflows/**'  # 但是 .github/workflows 目录及其子目录下的文件除外
 
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
     steps:
-      # 拉取代码
-      - name: Checkout
+      - name: Checkout # 拉取代码
         uses: actions/checkout@v4
 
       - name: Set up Flutter
@@ -23,14 +28,12 @@ jobs:
           channel: 'stable'
           flutter-version: 3.22.2
       
-      # 生成静态文件
-      - name: Build
+      - name: Build  # 生成静态文件
         run: |
          flutter pub get
          flutter build web --web-renderer canvaskit --base-href="/copy_ui/"
 
-      # 部署到 GitHub Pages
-      - name: Deploy
+      - name: Deploy # 部署到 GitHub Pages
         uses: JamesIves/github-pages-deploy-action@v4
         with:
           token: ${{ secrets.ACCESS_TOKEN }} 
