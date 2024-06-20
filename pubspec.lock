@@ -192,10 +192,24 @@ packages:
       url: "https://pub.flutter-io.cn"
     source: hosted
     version: "0.7.0"
+  ui_popover:
+    dependency: "direct main"
+    description:
+      path: "modules/ui_popover"
+      relative: true
+    source: path
+    version: "0.0.1"
   ui_rx_layout:
     dependency: "direct main"
     description:
       path: "modules/ui_rx_layout"
+      relative: true
+    source: path
+    version: "0.0.1"
+  ui_tooltip:
+    dependency: "direct main"
+    description:
+      path: "modules/ui_tooltip"
       relative: true
     source: path
     version: "0.0.1"
