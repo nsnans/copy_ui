@@ -6,6 +6,8 @@ on:
       - main
   pull_request:
     branches: [ "main" ]
+    types:
+      - closed  # 只在 PR 合并或关闭时触发
 
 jobs:
   build-and-deploy:
