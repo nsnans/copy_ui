@@ -61,7 +61,7 @@ merge_branch_to_main() {
   fi
 
   # 确认是否推送主分支到远程仓库
-  read -rp "${YELLOW}是否要推送主分支 main 到远程仓库 [y/n]? ${NC}" confirm_push
+  read -rp "$(echo -e ${YELLOW}是否要推送主分支 main 到远程仓库 [y/n]? ${NC})" confirm_push
   confirm_push=${confirm_push:-y}  # 如果用户直接按 Enter，默认为 y
   if [ "$confirm_push" = "y" ]; then
     echo -e "${YELLOW}推送主分支 main 到远程仓库...${NC}"
@@ -98,7 +98,7 @@ done
 echo -e "${YELLOW}请选择合并方式：${NC}"
 echo -e "1) 合并成一个提交 (squash merge)"
 echo -e "2) 保留多个提交 (regular merge)"
-read -rp "${YELLOW}输入选项 [1/2]: ${NC}" merge_option
+read -rp "$(echo -e ${YELLOW}输入选项 [1/2]: ${NC})" merge_option
 
 if [ "$merge_option" = "1" ]; then
   merge_type="squash"

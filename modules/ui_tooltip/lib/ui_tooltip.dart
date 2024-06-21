@@ -4,5 +4,3 @@ export 'src/tooltip.dart';
 export 'src/type.dart';
 
 export 'package:ui_util/tooltip_popover/index.dart';
-
-Object a = 1;
