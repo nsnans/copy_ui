@@ -1,17 +1,14 @@
+//控制位置
 import 'dart:async';
-import 'dart:ui';
 
-import 'package:flutter/animation.dart';
 import 'package:flutter/material.dart';
-import '../toly_tooltip/tooltip_placement.dart';
 
-import '../toly_popover/callback.dart';
-import '../toly_popover/toly_popover.dart';
+import 'index.dart';
 
-/// A delegate for computing the layout of a tooltip to be displayed above or
-/// below a target specified in the global coordinate system.
+/// 一个委托，用于计算显示在或上面的工具提示的布局
+/// 在全局坐标系中指定的目标下面。
 class PopoverPositionDelegate extends SingleChildLayoutDelegate {
-  /// Creates a delegate for computing the layout of a tooltip.
+  ///创建一个委托来计算工具提示的布局。
   PopoverPositionDelegate({
     required this.target,
     required this.boxSize,
@@ -23,8 +20,8 @@ class PopoverPositionDelegate extends SingleChildLayoutDelegate {
     required this.onPlacementShift,
   });
 
-  /// The offset of the target the tooltip is positioned near in the global
-  /// coordinate system.
+  ///工具提示所指向的目标的偏移量
+  ///坐标系统。
   final Offset target;
   final Placement placement;
   final OffsetCalculator? offsetCalculator;
@@ -34,8 +31,7 @@ class PopoverPositionDelegate extends SingleChildLayoutDelegate {
   final ValueChanged<Size>? onSizeFind;
   final Size boxSize;
 
-  /// The amount of vertical distance between the target and the displayed
-  /// tooltip.
+  ///目标与显示对象之间的垂直距离
   final double gap;
 
   @override
@@ -111,8 +107,10 @@ class PopoverPositionDelegate extends SingleChildLayoutDelegate {
       });
     }
     if (clickPosition != null) {
-      return clickPosition!
-          .translate(target.dx - boxSize.width / 2, target.dy - boxSize.height / 2);
+      return clickPosition!.translate(
+        target.dx - boxSize.width / 2,
+        target.dy - boxSize.height / 2,
+      );
     }
 
     bool outBottom =

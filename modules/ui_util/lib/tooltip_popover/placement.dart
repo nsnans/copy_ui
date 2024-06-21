@@ -1,8 +1,10 @@
+// 控制方向
+
 // 'top' | 'top-start' | 'top-end' |
 // 'bottom' | 'bottom-start' |'bottom-end' |
 // 'left' | 'left-start' | 'left-end' |
 // 'right' | 'right-start' | 'right-end'
-
+/// 方向
 enum Placement {
   top,
   topStart,
@@ -19,8 +21,8 @@ enum Placement {
 
   bool get isTop => index >= 0 && index <= 2;
 
-  bool get isVertical => isTop||isBottom;
-  bool get isHorizontal => isLeft||isRight;
+  bool get isVertical => isTop || isBottom;
+  bool get isHorizontal => isLeft || isRight;
 
   bool get isBottom => index >= 3 && index <= 5;
 
@@ -29,17 +31,17 @@ enum Placement {
   bool get isRight => index >= 9 && index <= 11;
 
   Placement get shift {
-    if (isBottom||isRight) {
+    if (isBottom || isRight) {
       return Placement.values[index - 3];
     }
-    if (isTop||isLeft) {
+    if (isTop || isLeft) {
       return Placement.values[index + 3];
     }
     return this;
   }
 }
 
-class PlacementShift{
+class PlacementShift {
   final Placement placement;
   final double x;
 

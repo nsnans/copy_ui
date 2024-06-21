@@ -16,7 +16,8 @@ fi
 # 确认提交操作
 echo -e "\n${YELLOW}准备提交更改...${NC}"
 echo -e "${YELLOW}提交信息: $1${NC}"
-read -p "确认提交？ (y/n): " confirm
+read -p "确认提交？ (默认 y): " confirm
+confirm=${confirm:-y}
 if [ "$confirm" != "y" ]; then
   echo -e "${RED}取消提交操作.${NC}"
   exit 0

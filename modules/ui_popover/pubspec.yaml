@@ -1,4 +1,7 @@
 name: ui_popover
+# 标记包不用于发布
+publish_to: none
+
 description: "A new Flutter package project."
 version: 0.0.1
 homepage:
@@ -10,6 +13,9 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+
+  ui_util:
+    path: ../ui_util
 
 dev_dependencies:
   flutter_test:

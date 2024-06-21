@@ -1,14 +1,22 @@
-import 'dart:math';
-import 'package:flutter/material.dart';
-import '../toly_tooltip/tooltip_placement.dart';
+// 下箭头
 
+import 'dart:math';
+
+import 'package:flutter/material.dart';
+import 'package:ui_util/tooltip_popover/placement.dart';
+
+/// 定义箭头属性
 class BubbleMeta {
+  /// 箭头高 `8`
   final double spineHeight;
+
+  /// 箭头宽 `70`
   final double angle;
 
   const BubbleMeta({this.spineHeight = 8, this.angle = 70});
 }
 
+/// 定义箭头描述
 class BubbleDecoration extends Decoration {
   final Color? color;
   final Color borderColor;
@@ -38,6 +46,7 @@ class BubbleDecoration extends Decoration {
   }
 }
 
+/// 传入箭头描述，画出箭头
 class BubbleBoxPainter extends BoxPainter {
   final BubbleDecoration decoration;
 

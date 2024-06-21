@@ -2,6 +2,7 @@
 
 merge_branch_to_main() {
   local branch_name=$1
+  local merge_type=$2
 
   # 切换到主分支 main
   echo "切换到主分支 main..."
@@ -17,21 +18,31 @@ merge_branch_to_main() {
     exit 1
   }
 
-  # 尝试合并指定分支到主分支
-  echo "合并分支 $branch_name 到主分支 main..."
-  git merge $branch_name || {
-    if git ls-files -u | grep -q "^"; then
-      echo "错误：合并分支 $branch_name 到主分支 main 失败。检测到冲突。"
-      echo "请解决冲突后，运行以下命令继续合并："
-      echo "  git add <解决冲突的文件>"
-      echo "  git commit"
-      echo "  $0 $branch_name"
+  # 根据用户选择的合并方式进行合并
+  if [ "$merge_type" = "squash" ]; then
+    echo "以 squash 方式合并分支 $branch_name 到主分支 main..."
+    git merge --squash $branch_name || {
+      echo "错误：合并分支 $branch_name 到主分支 main 失败。"
       exit 1
-    else
-      echo "合并失败，未知错误。"
-      exit 1
-    fi
-  }
+    }
+    echo "请编辑合并提交信息并提交："
+    echo "  git commit"
+  else
+    echo "合并分支 $branch_name 到主分支 main..."
+    git merge $branch_name || {
+      if git ls-files -u | grep -q "^"; then
+        echo "错误：合并分支 $branch_name 到主分支 main 失败。检测到冲突。"
+        echo "请解决冲突后，运行以下命令继续合并："
+        echo "  git add <解决冲突的文件>"
+        echo "  git commit"
+        echo "  $0 $branch_name $merge_type"
+        exit 1
+      else
+        echo "合并失败，未知错误。"
+        exit 1
+      fi
+    }
+  fi
 
   # 检查是否有未解决的冲突
   if git ls-files -u | grep -q "^"; then
@@ -39,7 +50,7 @@ merge_branch_to_main() {
     echo "解决冲突后，运行以下命令继续合并："
     echo "  git add <解决冲突的文件>"
     echo "  git commit"
-    echo "  $0 $branch_name"
+    echo "  $0 $branch_name $merge_type"
     exit 1
   fi
 
@@ -57,18 +68,39 @@ merge_branch_to_main() {
   fi
 }
 
-# 检查是否提供了分支名称
-if [ -z "$1" ]; then
-  echo "错误：没有提供要合并的分支名称。"
-  echo "用法：$0 分支名称"
+# 获取本地分支列表
+branches=$(git branch --list --no-color | sed 's/^\*//')
+
+# 检查是否有本地分支可供选择
+if [ -z "$branches" ]; then
+  echo "错误：没有找到任何本地分支。请先创建分支。"
   exit 1
 fi
 
-# 读取分支名称
-branch_name=$1
+# 交互式选择要合并的分支
+echo "请选择要合并到主分支 main 的分支："
+select branch_name in $branches; do
+  if [ -n "$branch_name" ]; then
+    break
+  else
+    echo "错误：无效的选择。请重新选择。"
+  fi
+done
 
-# 获取当前分支名称
-current_branch=$(git branch --show-current)
+# 询问用户选择合并方式
+echo "请选择合并方式："
+echo "1) 合并成一个提交 (squash merge)"
+echo "2) 保留多个提交 (regular merge)"
+read -p "输入选项 [1/2]: " merge_option
+
+if [ "$merge_option" = "1" ]; then
+  merge_type="squash"
+elif [ "$merge_option" = "2" ]; then
+  merge_type="regular"
+else
+  echo "错误：无效的选项。"
+  exit 1
+fi
 
 # 执行合并操作
-merge_branch_to_main $branch_name
+merge_branch_to_main $branch_name $merge_type

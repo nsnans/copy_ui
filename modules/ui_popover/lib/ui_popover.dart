@@ -1,3 +1,6 @@
 library ui_popover;
 
-Object a = 1;
+export 'src/popover.dart';
+export 'src/type.dart';
+
+export 'package:ui_util/tooltip_popover/index.dart';

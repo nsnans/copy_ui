@@ -1,3 +1,6 @@
 library ui_tooltip;
 
-export './src/tolyui_feedback.dart';
+export 'src/tooltip.dart';
+export 'src/type.dart';
+
+export 'package:ui_util/tooltip_popover/index.dart';

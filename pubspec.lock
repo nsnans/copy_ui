@@ -213,6 +213,13 @@ packages:
       relative: true
     source: path
     version: "0.0.1"
+  ui_util:
+    dependency: transitive
+    description:
+      path: "modules/ui_util"
+      relative: true
+    source: path
+    version: "0.0.1"
   vector_math:
     dependency: transitive
     description:

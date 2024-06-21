@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:ui_tooltip/ui_tooltip.dart';
+import 'package:ui_popover/ui_popover.dart';
 
 void main() {
   runApp(const MyApp());
@@ -41,15 +41,15 @@ class _MyHomePageState extends State<MyHomePage> {
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[TooltipDemo1()],
+          children: <Widget>[PopoverDemo4()],
         ),
       ),
     );
   }
 }
 
-class TooltipDemo1 extends StatelessWidget {
-  const TooltipDemo1({super.key});
+class PopoverDemo4 extends StatelessWidget {
+  const PopoverDemo4({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -60,11 +60,9 @@ class TooltipDemo1 extends StatelessWidget {
         children: [
           Row(
             children: [
-              // Spacer(),
-              Expanded(child: buildTolyTooltipDisplay(Placement.topStart)),
-              Expanded(child: buildTolyTooltipDisplay(Placement.top)),
-              Expanded(child: buildTolyTooltipDisplay(Placement.topEnd)),
-              // Spacer(),
+              Expanded(child: buildDisplay(Placement.topStart)),
+              Expanded(child: buildDisplay(Placement.top)),
+              Expanded(child: buildDisplay(Placement.topEnd)),
             ],
           ),
           const SizedBox(
@@ -72,9 +70,9 @@ class TooltipDemo1 extends StatelessWidget {
           ),
           Row(
             children: [
-              Expanded(child: buildTolyTooltipDisplay(Placement.leftStart)),
-              Expanded(child: buildTolyTooltipDisplay(Placement.left)),
-              Expanded(child: buildTolyTooltipDisplay(Placement.leftEnd)),
+              Expanded(child: buildDisplay(Placement.leftStart)),
+              Expanded(child: buildDisplay(Placement.left)),
+              Expanded(child: buildDisplay(Placement.leftEnd)),
             ],
           ),
           const SizedBox(
@@ -82,9 +80,9 @@ class TooltipDemo1 extends StatelessWidget {
           ),
           Row(
             children: [
-              Expanded(child: buildTolyTooltipDisplay(Placement.rightStart)),
-              Expanded(child: buildTolyTooltipDisplay(Placement.right)),
-              Expanded(child: buildTolyTooltipDisplay(Placement.rightEnd)),
+              Expanded(child: buildDisplay(Placement.rightStart)),
+              Expanded(child: buildDisplay(Placement.right)),
+              Expanded(child: buildDisplay(Placement.rightEnd)),
             ],
           ),
           const SizedBox(
@@ -92,9 +90,9 @@ class TooltipDemo1 extends StatelessWidget {
           ),
           Row(
             children: [
-              Expanded(child: buildTolyTooltipDisplay(Placement.bottomStart)),
-              Expanded(child: buildTolyTooltipDisplay(Placement.bottom)),
-              Expanded(child: buildTolyTooltipDisplay(Placement.bottomEnd)),
+              Expanded(child: buildDisplay(Placement.bottomStart)),
+              Expanded(child: buildDisplay(Placement.bottom)),
+              Expanded(child: buildDisplay(Placement.bottomEnd)),
             ],
           ),
         ],
@@ -102,19 +100,19 @@ class TooltipDemo1 extends StatelessWidget {
     );
   }
 
-  Widget buildTolyTooltipDisplay(Placement placement) {
+  Widget buildDisplay(Placement placement) {
     String info = placement.toString().split('.')[1];
-    info = info.substring(0, 1).toUpperCase() + info.substring(1);
+    String buttonText = _nameMap[placement]!;
     return Center(
-      child: BTooltip(
-        textStyle: TextStyle(fontSize: 13, color: Colors.white),
-        padding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+      child: BPopover(
         placement: placement,
         gap: 12,
-        message: '${info} \nmessage tips.nmessage tips.',
-        child: ElevatedButton(
-          onPressed: () {},
-          child: Text(_nameMap[placement]!),
+        overlay: _DisplayPanel(
+          title: info,
+        ),
+        builder: (_, ctrl, __) => ElevatedButton(
+          onPressed: () => ctrl.open(),
+          child: Text(buttonText),
         ),
       ),
     );
@@ -134,4 +132,36 @@ class TooltipDemo1 extends StatelessWidget {
     Placement.left: 'Left',
     Placement.leftStart: 'LStart',
   };
+}
+
+class _DisplayPanel extends StatelessWidget {
+  final String title;
+
+  const _DisplayPanel({super.key, required this.title});
+
+  @override
+  Widget build(BuildContext context) {
+    return SelectionArea(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8.0),
+            child: Text(
+              title.substring(0, 1).toUpperCase() + title.substring(1),
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+            ),
+          ),
+          Divider(),
+          const Padding(
+            padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8.0),
+            child: Text(
+              'this is content, this is content, this is content',
+            ),
+          ),
+        ],
+      ),
+    );
+  }
 }

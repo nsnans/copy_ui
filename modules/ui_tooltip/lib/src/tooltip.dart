@@ -1,7 +1,3 @@
-// Copyright 2014 The Flutter Authors. All rights reserved.
-// Use of this source code is governed by a BSD-style license that can be
-// found in the LICENSE file.
-
 import 'dart:async';
 
 import 'package:flutter/foundation.dart';
@@ -9,169 +5,15 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
+import 'package:ui_util/tooltip_popover/index.dart';
 
-import '../tolyui_feedback.dart';
-import 'position_delegate.dart';
-import 'tooltip_placement.dart';
+import 'type.dart';
 
-/// Signature for when a tooltip is triggered.
-typedef TooltipTriggeredCallback = void Function();
+part 'tooltip_overlay.dart';
+part 'mouse_region.dart';
 
-/// A special [MouseRegion] that when nested, only the first [_ExclusiveMouseRegion]
-/// to be hit in hit-testing order will be added to the BoxHitTestResult (i.e.,
-/// child over parent, last sibling over first sibling).
-///
-/// The [onEnter] method will be called when a mouse pointer enters this
-/// [MouseRegion], and there is no other [_ExclusiveMouseRegion]s obstructing
-/// this [_ExclusiveMouseRegion] from receiving the events. This includes the
-/// case where the mouse cursor stays within the paint bounds of an outer
-/// [_ExclusiveMouseRegion], but moves outside of the bounds of the inner
-/// [_ExclusiveMouseRegion] that was initially blocking the outer widget.
-///
-/// Likewise, [onExit] is called when the a mouse pointer moves out of the paint
-/// bounds of this widget, or moves into another [_ExclusiveMouseRegion] that
-/// overlaps this widget in hit-testing order.
-///
-/// This widget doesn't affect [MouseRegion]s that aren't [_ExclusiveMouseRegion]s,
-/// or other [HitTestTarget]s in the tree.
-class _ExclusiveMouseRegion extends MouseRegion {
-  const _ExclusiveMouseRegion({
-    super.onEnter,
-    super.onExit,
-    super.child,
-  });
-
-  @override
-  _RenderExclusiveMouseRegion createRenderObject(BuildContext context) {
-    return _RenderExclusiveMouseRegion(
-      onEnter: onEnter,
-      onExit: onExit,
-    );
-  }
-}
-
-class _RenderExclusiveMouseRegion extends RenderMouseRegion {
-  _RenderExclusiveMouseRegion({
-    super.onEnter,
-    super.onExit,
-  });
-
-  static bool isOutermostMouseRegion = true;
-  static bool foundInnermostMouseRegion = false;
-
-  @override
-  bool hitTest(BoxHitTestResult result, {required Offset position}) {
-    bool isHit = false;
-    final bool outermost = isOutermostMouseRegion;
-    isOutermostMouseRegion = false;
-    if (size.contains(position)) {
-      isHit =
-          hitTestChildren(result, position: position) || hitTestSelf(position);
-      if ((isHit || behavior == HitTestBehavior.translucent) &&
-          !foundInnermostMouseRegion) {
-        foundInnermostMouseRegion = true;
-        result.add(BoxHitTestEntry(this, position));
-      }
-    }
-
-    if (outermost) {
-      // The outermost region resets the global states.
-      isOutermostMouseRegion = true;
-      foundInnermostMouseRegion = false;
-    }
-    return isHit;
-  }
-}
-
-/// A Material Design tooltip.
-///
-/// Tooltips provide text labels which help explain the function of a button or
-/// other user interface action. Wrap the button in a [TolyTooltip] widget and provide
-/// a message which will be shown when the widget is long pressed.
-///
-/// Many widgets, such as [IconButton], [FloatingActionButton], and
-/// [PopupMenuButton] have a `tooltip` property that, when non-null, causes the
-/// widget to include a [TolyTooltip] in its build.
-///
-/// Tooltips improve the accessibility of visual widgets by proving a textual
-/// representation of the widget, which, for example, can be vocalized by a
-/// screen reader.
-///
-/// {@youtube 560 315 https://www.youtube.com/watch?v=EeEfD5fI-5Q}
-///
-/// {@tool dartpad}
-/// This example show a basic [TolyTooltip] which has a [Text] as child.
-/// [message] contains your label to be shown by the tooltip when
-/// the child that Tooltip wraps is hovered over on web or desktop. On mobile,
-/// the tooltip is shown when the widget is long pressed.
-///
-/// This tooltip will default to showing above the [Text] instead of below
-/// because its ambient [TooltipThemeData.preferBelow] is false.
-/// (See the use of [MaterialApp.theme].)
-/// Setting that piece of theme data is recommended to avoid having a finger or
-/// cursor hide the tooltip. For other ways to set that piece of theme data see:
-///
-/// * [Theme.data], [ThemeData.tooltipTheme]
-/// * [TooltipTheme.data]
-///
-/// or it can be set directly on each tooltip with [TolyTooltip.preferBelow].
-///
-/// ** See code in examples/api/lib/material/tooltip/tooltip.0.dart **
-/// {@end-tool}
-///
-/// {@tool dartpad}
-/// This example covers most of the attributes available in Tooltip.
-/// `decoration` has been used to give a gradient and borderRadius to Tooltip.
-/// `height` has been used to set a specific height of the Tooltip.
-/// `preferBelow` is true; the tooltip will prefer showing below [TolyTooltip]'s child widget.
-/// However, it may show the tooltip above if there's not enough space
-/// below the widget.
-/// `textStyle` has been used to set the font size of the 'message'.
-/// `showDuration` accepts a Duration to continue showing the message after the long
-/// press has been released or the mouse pointer exits the child widget.
-/// `waitDuration` accepts a Duration for which a mouse pointer has to hover over the child
-/// widget before the tooltip is shown.
-///
-/// ** See code in examples/api/lib/material/tooltip/tooltip.1.dart **
-/// {@end-tool}
-///
-/// {@tool dartpad}
-/// This example shows a rich [TolyTooltip] that specifies the [richMessage]
-/// parameter instead of the [message] parameter (only one of these may be
-/// non-null. Any [InlineSpan] can be specified for the [richMessage] attribute,
-/// including [WidgetSpan].
-///
-/// ** See code in examples/api/lib/material/tooltip/tooltip.2.dart **
-/// {@end-tool}
-///
-/// {@tool dartpad}
-/// This example shows how [TolyTooltip] can be shown manually with [TooltipTriggerMode.manual]
-/// by calling the [TolyTooltipState.ensureTooltipVisible] function.
-///
-/// ** See code in examples/api/lib/material/tooltip/tooltip.3.dart **
-/// {@end-tool}
-///
-/// See also:
-///
-///  * <https://material.io/design/components/tooltips.html>
-///  * [TooltipTheme] or [ThemeData.tooltipTheme]
-///  * [TooltipVisibility]
-class TolyTooltip extends StatefulWidget {
-  /// Creates a tooltip.
-  ///
-  /// By default, tooltips should adhere to the
-  /// [Material specification](https://material.io/design/components/tooltips.html#spec).
-  /// If the optional constructor parameters are not defined, the values
-  /// provided by [TooltipTheme.of] will be used if a [TooltipTheme] is present
-  /// or specified in [ThemeData].
-  ///
-  /// All parameters that are defined in the constructor will
-  /// override the default values _and_ the values in [TooltipTheme.of].
-  ///
-  /// Only one of [message] and  bvc[richMessage] may be non-null.
-  ///  \bv,m,
-  ///  |
-  const TolyTooltip({
+class BTooltip extends StatefulWidget {
+  const BTooltip({
     super.key,
     this.message,
     this.richMessage,
@@ -202,31 +44,31 @@ class TolyTooltip extends StatefulWidget {
           '`textStyle` directly to the `richMessage` InlineSpan.',
         );
 
-  /// The text to display in the tooltip.
+  /// 要显示在工具提示中的文本。
   ///
-  /// Only one of [message] and [richMessage] may be non-null.
+  /// [message]和[richMessage]中只能有一个非空。
   final String? message;
 
   final Placement placement;
 
-  /// The rich text to display in the tooltip.
+  /// 要在工具提示中显示的富文本。
   ///
-  /// Only one of [message] and [richMessage] may be non-null.
+  /// [message]和[richMessage]中只能有一个非空。
   final InlineSpan? richMessage;
 
-  /// The height of the tooltip's [child].
+  /// 工具提示[child]的高度。
   ///
-  /// If the [child] is null, then this is the tooltip's intrinsic height.
+  /// 如果[child]为null，则这是工具提示的固有高度。
   final double? height;
   final double? maxWidth;
 
-  /// The amount of space by which to inset the tooltip's [child].
+  /// 插入工具提示的[child]所占用的空间。
   ///
-  /// On mobile, defaults to 16.0 logical pixels horizontally and 4.0 vertically.
-  /// On desktop, defaults to 8.0 logical pixels horizontally and 4.0 vertically.
+  /// 在移动设备上，默认水平为16.0逻辑像素，垂直为4.0。
+  /// 在桌面，默认水平为8.0逻辑像素，垂直为4.0。
   final EdgeInsetsGeometry? padding;
 
-  /// The empty space that surrounds the tooltip.
+  /// 工具提示周围的空白区域。
   ///
   /// Defines the tooltip's outer [Container.margin]. By default, a
   /// long tooltip will span the width of its window. If long enough,
@@ -242,13 +84,12 @@ class TolyTooltip extends StatefulWidget {
   /// The gap between the widget and the displayed tooltip.
   final double? gap;
 
-
   /// Whether the tooltip's [message] or [richMessage] should be excluded from
   /// the semantics tree.
   ///
   /// Defaults to false. A tooltip will add a [Semantics] label that is set to
-  /// [TolyTooltip.message] if non-null, or the plain text value of
-  /// [TolyTooltip.richMessage] otherwise. Set this property to true if the app is
+  /// [BTooltip.message] if non-null, or the plain text value of
+  /// [BTooltip.richMessage] otherwise. Set this property to true if the app is
   /// going to provide its own custom semantics label.
   final bool? excludeFromSemantics;
 
@@ -340,7 +181,7 @@ class TolyTooltip extends StatefulWidget {
   /// or after a long press when [triggerMode] is [TooltipTriggerMode.longPress].
   final TooltipTriggeredCallback? onTriggered;
 
-  static final List<TolyTooltipState> _openedTooltips = <TolyTooltipState>[];
+  static final List<BTooltipState> _openedTooltips = <BTooltipState>[];
 
   /// Dismiss all of the tooltips that are currently shown on the screen,
   /// including those with mouse cursors currently hovering over them.
@@ -350,8 +191,8 @@ class TolyTooltip extends StatefulWidget {
   static bool dismissAllToolTips() {
     if (_openedTooltips.isNotEmpty) {
       // Avoid concurrent modification.
-      final List<TolyTooltipState> openedTooltips = _openedTooltips.toList();
-      for (final TolyTooltipState state in openedTooltips) {
+      final List<BTooltipState> openedTooltips = _openedTooltips.toList();
+      for (final BTooltipState state in openedTooltips) {
         assert(state.mounted);
         state._scheduleDismissTooltip(withDelay: Duration.zero);
       }
@@ -361,7 +202,7 @@ class TolyTooltip extends StatefulWidget {
   }
 
   @override
-  State<TolyTooltip> createState() => TolyTooltipState();
+  State<BTooltip> createState() => BTooltipState();
 
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
@@ -383,8 +224,7 @@ class TolyTooltip extends StatefulWidget {
         defaultValue: null));
     properties.add(DiagnosticsProperty<EdgeInsetsGeometry>('margin', margin,
         defaultValue: null));
-    properties.add(
-        DoubleProperty('vertical offset', gap, defaultValue: null));
+    properties.add(DoubleProperty('vertical offset', gap, defaultValue: null));
     // properties.add(FlagProperty('position',
     //     value: placement, ifTrue: 'below', ifFalse: 'above', showName: true));
     properties.add(FlagProperty('semantics',
@@ -405,11 +245,11 @@ class TolyTooltip extends StatefulWidget {
   }
 }
 
-/// Contains the state for a [TolyTooltip].
+/// Contains the state for a [BTooltip].
 ///
 /// This class can be used to programmatically show the Tooltip, see the
 /// [ensureTooltipVisible] method.
-class TolyTooltipState extends State<TolyTooltip>
+class BTooltipState extends State<BTooltip>
     with SingleTickerProviderStateMixin {
   static const double _defaultVerticalOffset = 24.0;
   static const EdgeInsetsGeometry _defaultMargin = EdgeInsets.zero;
@@ -492,11 +332,11 @@ class TolyTooltipState extends State<TolyTooltip>
     assert(mounted);
     switch ((_isTooltipVisible(_animationStatus), _isTooltipVisible(status))) {
       case (true, false):
-        TolyTooltip._openedTooltips.remove(this);
+        BTooltip._openedTooltips.remove(this);
         _overlayController.hide();
       case (false, true):
         _overlayController.show();
-        TolyTooltip._openedTooltips.add(this);
+        BTooltip._openedTooltips.add(this);
         SemanticsService.tooltip(_tooltipMessage);
       case (true, true) || (false, false):
         break;
@@ -690,10 +530,10 @@ class TolyTooltipState extends State<TolyTooltip>
     // tooltip is the first to be hit in the widget tree's hit testing order.
     // See also _ExclusiveMouseRegion for the exact behavior.
     _activeHoveringPointerDevices.add(event.device);
-    final List<TolyTooltipState> openedTooltips =
-        TolyTooltip._openedTooltips.toList();
+    final List<BTooltipState> openedTooltips =
+        BTooltip._openedTooltips.toList();
     bool otherTooltipsDismissed = false;
-    for (final TolyTooltipState tooltip in openedTooltips) {
+    for (final BTooltipState tooltip in openedTooltips) {
       assert(tooltip.mounted);
       final Set<int> hoveringDevices = tooltip._activeHoveringPointerDevices;
       final bool shouldDismiss = tooltip != this &&
@@ -721,7 +561,7 @@ class TolyTooltipState extends State<TolyTooltip>
   ///
   /// After made visible by this method, The tooltip does not automatically
   /// dismiss after `waitDuration`, until the user dismisses/re-triggers it, or
-  /// [TolyTooltip.dismissAllToolTips] is called.
+  /// [BTooltip.dismissAllToolTips] is called.
   ///
   /// Returns `false` when the tooltip shouldn't be shown or when the tooltip
   /// was already visible.
@@ -843,7 +683,7 @@ class TolyTooltipState extends State<TolyTooltip>
       placement: widget.placement,
       maxWidth: widget.maxWidth,
       richMessage: widget.richMessage ?? TextSpan(text: widget.message),
-      maxHeight: widget.height??double.infinity,
+      maxHeight: widget.height ?? double.infinity,
       padding: widget.padding ?? tooltipTheme.padding ?? _getDefaultPadding(),
       margin: widget.margin ?? tooltipTheme.margin ?? _defaultMargin,
       onEnter: _handleMouseEnter,
@@ -855,9 +695,8 @@ class TolyTooltipState extends State<TolyTooltip>
       animation:
           CurvedAnimation(parent: _controller, curve: Curves.fastOutSlowIn),
       target: target,
-      verticalOffset: widget.gap ??
-          tooltipTheme.verticalOffset ??
-          _defaultVerticalOffset,
+      verticalOffset:
+          widget.gap ?? tooltipTheme.verticalOffset ?? _defaultVerticalOffset,
     );
 
     return SelectionContainer.maybeOf(context) == null
@@ -869,7 +708,7 @@ class TolyTooltipState extends State<TolyTooltip>
   void dispose() {
     GestureBinding.instance.pointerRouter
         .removeGlobalRoute(_handleGlobalPointerEvent);
-    TolyTooltip._openedTooltips.remove(this);
+    BTooltip._openedTooltips.remove(this);
     // _longPressRecognizer.dispose() and _tapRecognizer.dispose() may call
     // their registered onCancel callbacks if there's a gesture in progress.
     // Remove the onCancel callbacks to prevent the registered callbacks from
@@ -917,157 +756,5 @@ class TolyTooltipState extends State<TolyTooltip>
       overlayChildBuilder: _buildTooltipOverlay,
       child: result,
     );
-  }
-}
-
-class _TooltipOverlay extends StatefulWidget {
-  const _TooltipOverlay({
-    required this.maxHeight,
-    required this.richMessage,
-    required this.boxSize,
-    required this.placement,
-    this.maxWidth,
-    this.padding,
-    this.margin,
-    required this.decoration,
-    this.textStyle,
-    this.textAlign,
-    required this.animation,
-    required this.target,
-    required this.verticalOffset,
-    this.onEnter,
-    this.onExit,
-  });
-
-  final InlineSpan richMessage;
-  final Placement placement;
-  final double maxHeight;
-  final double? maxWidth;
-  final EdgeInsetsGeometry? padding;
-  final EdgeInsetsGeometry? margin;
-  final DecorationConfig decoration;
-  final TextStyle? textStyle;
-  final TextAlign? textAlign;
-  final Animation<double> animation;
-  final Offset target;
-  final Size boxSize;
-  final double verticalOffset;
-  final PointerEnterEventListener? onEnter;
-  final PointerExitEventListener? onExit;
-
-  @override
-  State<_TooltipOverlay> createState() => _TooltipOverlayState();
-}
-
-class DecorationConfig {
-  final PaintingStyle style;
-  final Color backgroundColor;
-  final Color? textColor;
-  final bool isBubble;
-  final Radius radius;
-  final List<BoxShadow>? shadows;
-  final BubbleMeta bubbleMeta;
-
-  const DecorationConfig({
-    this.style = PaintingStyle.fill,
-    this.backgroundColor= const Color(0xff303133),
-    this.textColor,
-    this.shadows,
-    this.radius = const Radius.circular(4),
-    this.isBubble = true,
-    this.bubbleMeta = const BubbleMeta(),
-  });
-}
-
-class _TooltipOverlayState extends State<_TooltipOverlay> {
-  late Placement effectPlacement = widget.placement;
-  double shiftX = 0;
-
-  Decoration get effectDecoration {
-    DecorationConfig config = widget.decoration;
-    if (config.isBubble) {
-      return BubbleDecoration(
-        borderColor: const Color(0xffe4e7ed),
-        shiftX: shiftX,
-        radius: config.radius,
-        boxSize: widget.boxSize,
-        placement: effectPlacement,
-        color: config.backgroundColor,
-          style: config.style,
-        bubbleMeta: config.bubbleMeta,
-      );
-    }
-    return BoxDecoration(
-      color: config.backgroundColor,
-      borderRadius: BorderRadius.all(config.radius),
-      border: config.style==PaintingStyle.stroke?Border.all(
-        color: Color(0xffe4e7ed)
-      ):null
-    );
-  }
-
-  TextStyle? get effectTextStyle {
-    return  widget.textStyle?.copyWith(color: widget.decoration.textColor);
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    Widget result = FadeTransition(
-      opacity: widget.animation,
-      child: ConstrainedBox(
-        constraints: BoxConstraints(
-            maxHeight: widget.maxHeight,
-            maxWidth: widget.maxWidth ?? 320),
-        child: DefaultTextStyle(
-          style: Theme.of(context).textTheme.bodyMedium!,
-          child: Semantics(
-            container: true,
-            child: Container(
-              // decoration: decoration,
-              decoration: effectDecoration,
-              // padding: widget.padding,
-              // margin: margin,
-              child: SingleChildScrollView(
-                child: Padding(
-                  padding: widget.padding??EdgeInsets.zero,
-                  child: Text.rich(
-                    widget.richMessage,
-                    style: effectTextStyle,
-                    textAlign: widget.textAlign,
-                  ),
-                ),
-              ),
-            ),
-          ),
-        ),
-      ),
-    );
-    if (widget.onEnter != null || widget.onExit != null) {
-      result = _ExclusiveMouseRegion(
-        onEnter: widget.onEnter,
-        onExit: widget.onExit,
-        child: result,
-      );
-    }
-    return Positioned.fill(
-      bottom: 0.0,
-      child: CustomSingleChildLayout(
-        delegate: PopoverPositionDelegate(
-          clickPosition: null,
-          onPlacementShift: _onPlacementShift,
-          target: widget.target,
-          placement: widget.placement,
-          gap: widget.verticalOffset,
-          boxSize: widget.boxSize,
-        ),
-        child: result,
-      ),
-    );
-  }
-
-  void _onPlacementShift(PlacementShift shift) {
-    effectPlacement = shift.placement;
-    shiftX = shift.x;
-    setState(() {});
   }
 }

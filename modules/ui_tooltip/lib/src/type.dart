@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import './tooltip_placement.dart';
+import 'package:ui_util/tooltip_popover/index.dart';
 
 class DecorationConfig {
   final PaintingStyle style;
@@ -21,25 +21,4 @@ class DecorationConfig {
   });
 }
 
-class BubbleMeta {
-  final double spineHeight;
-  final double angle;
 
-  const BubbleMeta({this.spineHeight = 8, this.angle = 70});
-}
-
-typedef OffsetCalculator = Offset Function(Calculator calculator);
-
-class Calculator {
-  final Placement placement;
-  final Size boxSize;
-  final Size overlaySize;
-  final double gap;
-
-  Calculator({
-    required this.placement,
-    required this.boxSize,
-    required this.overlaySize,
-    required this.gap,
-  });
-}
