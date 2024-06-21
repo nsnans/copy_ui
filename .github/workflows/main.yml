@@ -1,4 +1,4 @@
-name: Deploy GitHub Pages
+name: GitHub Pages
 
 on:
   push:
@@ -19,7 +19,7 @@ jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout # 拉取代码
+      - name: Checkout
         uses: actions/checkout@v4
 
       - name: Set up Flutter
@@ -28,12 +28,12 @@ jobs:
           channel: 'stable'
           flutter-version: 3.22.2
       
-      - name: Build  # 生成静态文件
+      - name: Build 
         run: |
          flutter pub get
          flutter build web --web-renderer canvaskit --base-href="/copy_ui/"
 
-      - name: Deploy # 部署到 GitHub Pages
+      - name: Deploy 
         uses: JamesIves/github-pages-deploy-action@v4
         with:
           token: ${{ secrets.ACCESS_TOKEN }} 
