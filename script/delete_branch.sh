@@ -27,27 +27,28 @@ done
 
 # 显示确认信息
 echo -e "您确定要删除本地分支 '${YELLOW}$branch_name${NC}' 和远程分支 '${YELLOW}$branch_name${NC}' 吗？"
-read -p "确认删除请输入 [y/n]: " confirm
-if [ "$confirm" != "y" ]; then
+read -n 1 -p "确认删除请输入 [y/n] (默认为y): " confirm
+echo ""  # 换行
+
+# 处理用户输入
+if [ -z "$confirm" ] || [ "$confirm" == "y" ]; then
+  echo -e "正在删除本地分支 ${YELLOW}$branch_name${NC}..."
+  git branch -D $branch_name
+  if [ $? -ne 0 ]; then
+    echo -e "${RED}错误：删除本地分支 $branch_name 失败。${NC}"
+    exit 1
+  fi
+
+  echo -e "正在删除远程分支 ${YELLOW}$branch_name${NC}..."
+  git push origin --delete $branch_name
+  if [ $? -ne 0 ]; then
+    echo -e "${RED}错误：删除远程分支 $branch_name 失败。${NC}"
+    echo -e "${RED}请确保分支名称 '${YELLOW}$branch_name${NC}' 存在并且您有权限删除远程分支。${NC}"
+    exit 1
+  fi
+
+  echo -e "${GREEN}成功删除分支 $branch_name 的本地和远程分支。${NC}"
+else
   echo -e "${YELLOW}取消删除操作。${NC}"
   exit 0
 fi
-
-# 删除本地分支
-echo -e "正在删除本地分支 ${YELLOW}$branch_name${NC}..."
-git branch -D $branch_name
-if [ $? -ne 0 ]; then
-  echo -e "${RED}错误：删除本地分支 $branch_name 失败。${NC}"
-  exit 1
-fi
-
-# 删除远程分支
-echo -e "正在删除远程分支 ${YELLOW}$branch_name${NC}..."
-git push origin --delete $branch_name
-if [ $? -ne 0 ]; then
-  echo -e "${RED}错误：删除远程分支 $branch_name 失败。${NC}"
-  echo -e "${RED}请确保分支名称 '${YELLOW}$branch_name${NC}' 存在并且您有权限删除远程分支。${NC}"
-  exit 1
-fi
-
-echo -e "${GREEN}成功删除分支 $branch_name 的本地和远程分支。${NC}"
