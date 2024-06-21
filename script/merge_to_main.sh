@@ -25,11 +25,8 @@ merge_branch_to_main() {
       echo "错误：合并分支 $branch_name 到主分支 main 失败。"
       exit 1
     }
-    echo "请编辑合并提交信息并提交（输入 EOF 结束输入）："
-    git commit || {
-      echo "错误：提交失败。"
-      exit 1
-    }
+    echo "请编辑合并提交信息并提交："
+    git commit  # 允许用户编辑提交信息
   else
     echo "合并分支 $branch_name 到主分支 main..."
     git merge $branch_name || {
