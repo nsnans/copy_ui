@@ -25,8 +25,11 @@ merge_branch_to_main() {
       echo "错误：合并分支 $branch_name 到主分支 main 失败。"
       exit 1
     }
-    echo "请编辑合并提交信息并提交："
-    echo "  git commit"
+    echo "请编辑合并提交信息并提交（输入 EOF 结束输入）："
+    git commit || {
+      echo "错误：提交失败。"
+      exit 1
+    }
   else
     echo "合并分支 $branch_name 到主分支 main..."
     git merge $branch_name || {
@@ -55,7 +58,8 @@ merge_branch_to_main() {
   fi
 
   # 确认是否推送主分支到远程仓库
-  read -p "是否要推送主分支 main 到远程仓库 [y/n]? " confirm_push
+  read -rp "是否要推送主分支 main 到远程仓库 [y/n]? " confirm_push
+  confirm_push=${confirm_push:-y}  # 如果用户直接按 Enter，默认为 y
   if [ "$confirm_push" = "y" ]; then
     echo "推送主分支 main 到远程仓库..."
     git push origin main || {
@@ -91,7 +95,7 @@ done
 echo "请选择合并方式："
 echo "1) 合并成一个提交 (squash merge)"
 echo "2) 保留多个提交 (regular merge)"
-read -p "输入选项 [1/2]: " merge_option
+read -rp "输入选项 [1/2]: " merge_option
 
 if [ "$merge_option" = "1" ]; then
   merge_type="squash"
@@ -103,4 +107,4 @@ else
 fi
 
 # 执行合并操作
-merge_branch_to_main $branch_name $merge_type
+merge_branch_to_main "$branch_name" "$merge_type"
