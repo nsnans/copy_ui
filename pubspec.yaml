@@ -37,6 +37,10 @@ dependencies:
     path: modules/ui_tooltip
   ui_popover:
     path: modules/ui_popover
+  ui_message:
+    path: modules/ui_message
+  ui_dropdown_menu:
+    path: modules/ui_menu/ui_dropdown_menu
 
 
   # The following adds the Cupertino Icons font to your application.

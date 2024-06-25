@@ -192,6 +192,20 @@ packages:
       url: "https://pub.flutter-io.cn"
     source: hosted
     version: "0.7.0"
+  ui_dropdown_menu:
+    dependency: "direct main"
+    description:
+      path: "modules/ui_menu/ui_dropdown_menu"
+      relative: true
+    source: path
+    version: "0.0.1"
+  ui_message:
+    dependency: "direct main"
+    description:
+      path: "modules/ui_message"
+      relative: true
+    source: path
+    version: "0.0.1"
   ui_popover:
     dependency: "direct main"
     description:

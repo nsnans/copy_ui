@@ -1,8 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-
-import '../../../ui_message.dart';
-
+import 'package:ui_message/ui_message.dart';
 
 class MessagePanel extends StatelessWidget {
   final String? message;
@@ -27,8 +25,7 @@ class MessagePanel extends StatelessWidget {
   });
 
   Decoration decoration(BuildContext context) {
-    TolyMessageStyleTheme? theme =
-        Theme.of(context).extension<TolyMessageStyleTheme>();
+    MessageStyleTheme? theme = Theme.of(context).extension<MessageStyleTheme>();
     BorderRadius borderRadius = theme?.borderRadius ?? BorderRadius.circular(4);
     if (plain) {
       bool isDark = Theme.of(context).brightness == Brightness.dark;

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-
-import '../../../ui_message.dart';
+import 'package:ui_message/ui_message.dart';
 
 typedef SizeReadCallback = void Function(MessageOverlayState state, Size size);
 

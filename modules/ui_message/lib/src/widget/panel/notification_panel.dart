@@ -1,8 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-
-import '../../../ui_message.dart';
-
+import 'package:ui_message/ui_message.dart';
 
 class NotificationPanel extends StatelessWidget {
   final Widget title;
@@ -22,8 +20,7 @@ class NotificationPanel extends StatelessWidget {
 
   Decoration decoration(BuildContext context) {
     bool isDark = Theme.of(context).brightness == Brightness.dark;
-    TolyMessageStyleTheme? theme =
-        Theme.of(context).extension<TolyMessageStyleTheme>();
+    MessageStyleTheme? theme = Theme.of(context).extension<MessageStyleTheme>();
     BorderRadius borderRadius =
         theme?.noticeBorderRadius ?? BorderRadius.circular(4);
 

@@ -15,7 +15,7 @@ class MessageStyle {
   });
 }
 
-class TolyMessageStyleTheme extends ThemeExtension<TolyMessageStyleTheme> {
+class MessageStyleTheme extends ThemeExtension<MessageStyleTheme> {
   final MessageStyle successStyle;
   final MessageStyle infoStyle;
   final MessageStyle errorStyle;
@@ -25,7 +25,7 @@ class TolyMessageStyleTheme extends ThemeExtension<TolyMessageStyleTheme> {
   final bool? plain;
   final bool? closeable;
 
-  TolyMessageStyleTheme({
+  MessageStyleTheme({
     required this.successStyle,
     required this.infoStyle,
     required this.errorStyle,
@@ -36,7 +36,7 @@ class TolyMessageStyleTheme extends ThemeExtension<TolyMessageStyleTheme> {
     this.noticeBorderRadius = const BorderRadius.all(Radius.circular(4)),
   });
 
-  TolyMessageStyleTheme.tolyuiLight({
+  MessageStyleTheme.uiLight({
     this.successStyle = const MessageStyle(
       backgroundColor: Color(0xfff0f9eb),
       foregroundColor: Color(0xff67c23a),
@@ -67,7 +67,7 @@ class TolyMessageStyleTheme extends ThemeExtension<TolyMessageStyleTheme> {
     this.noticeBorderRadius = const BorderRadius.all(Radius.circular(4)),
   });
 
-  TolyMessageStyleTheme.tolyuiDark({
+  MessageStyleTheme.uiDark({
     this.successStyle = const MessageStyle(
       backgroundColor: Color(0xff1c2518),
       foregroundColor: Color(0xff67c23a),
@@ -96,11 +96,10 @@ class TolyMessageStyleTheme extends ThemeExtension<TolyMessageStyleTheme> {
     this.closeable = false,
     this.borderRadius = const BorderRadius.all(Radius.circular(4)),
     this.noticeBorderRadius = const BorderRadius.all(Radius.circular(4)),
-
   });
 
   @override
-  TolyMessageStyleTheme copyWith({
+  MessageStyleTheme copyWith({
     MessageStyle? successStyle,
     MessageStyle? infoStyle,
     MessageStyle? errorStyle,
@@ -110,7 +109,7 @@ class TolyMessageStyleTheme extends ThemeExtension<TolyMessageStyleTheme> {
     bool? plain,
     bool? closeable,
   }) {
-    return TolyMessageStyleTheme(
+    return MessageStyleTheme(
       successStyle: successStyle ?? this.successStyle,
       infoStyle: infoStyle ?? this.infoStyle,
       errorStyle: errorStyle ?? this.errorStyle,
@@ -123,7 +122,7 @@ class TolyMessageStyleTheme extends ThemeExtension<TolyMessageStyleTheme> {
   }
 
   @override
-  TolyMessageStyleTheme lerp(TolyMessageStyleTheme? other, double t) => this;
+  MessageStyleTheme lerp(MessageStyleTheme? other, double t) => this;
 }
 
 // class Default

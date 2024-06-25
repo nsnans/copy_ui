@@ -1,9 +1,4 @@
-import 'package:flutter/material.dart';
-
-import '../../model/position.dart';
-import '../../model/task.dart';
-import '../../widget/overlay/message_overlay.dart';
-import '../../widget/theme/toly_message_show_theme.dart';
+part of 'message_mixin.dart';
 
 typedef CloseableBuilder = Widget Function(
     BuildContext ccontext, VoidCallback close);
@@ -28,21 +23,26 @@ class MessageTaskManager {
   void add({
     required CloseableBuilder builder,
     required BuildContext context,
-    Duration? duration ,
-    Duration? animaDuration ,
-    MessagePosition? position ,
+    Duration? duration,
+    Duration? animaDuration,
+    MessagePosition? position,
     Offset? offset,
     double? gap,
   }) {
     // 根据主题获取默认数据
-    TolyMessageShowTheme? theme = Theme.of(context).extension<TolyMessageShowTheme>();
-    Duration effectDuration = duration?? theme?.duration?? const Duration(seconds: 3);
-    Duration effectAnimaDuration = animaDuration?? theme?.animaDuration??  const Duration(milliseconds: 250);
-    MessagePosition effectPosition = position?? theme?.messagePosition?? MessagePosition.top;
-    double effectGap = gap?? theme?.gap?? 12;
-    Offset effectOffset = offset?? theme?.offset?? const Offset(0, 16);
+    MessageShowTheme? theme = Theme.of(context).extension<MessageShowTheme>();
+    Duration effectDuration =
+        duration ?? theme?.duration ?? const Duration(seconds: 3);
+    Duration effectAnimaDuration = animaDuration ??
+        theme?.animaDuration ??
+        const Duration(milliseconds: 250);
+    MessagePosition effectPosition =
+        position ?? theme?.messagePosition ?? MessagePosition.top;
+    double effectGap = gap ?? theme?.gap ?? 12;
+    Offset effectOffset = offset ?? theme?.offset ?? const Offset(0, 16);
 
-    MessageTask task = MessageTask(() => Future.delayed(effectDuration), effectPosition);
+    MessageTask task =
+        MessageTask(() => Future.delayed(effectDuration), effectPosition);
     double y = endY(effectOffset.dy - effectGap, effectPosition);
     EdgeInsets padding = position == MessagePosition.top
         ? EdgeInsets.only(top: effectGap)

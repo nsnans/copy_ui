@@ -1,52 +1,21 @@
 import 'package:flutter/material.dart';
+import 'package:ui_message/ui_message.dart';
 
-import '../../../ui_message.dart';
-import 'message_manager.dart';
+part 'type.dart';
 
-mixin ContextAttachable {
-  BuildContext? _context;
-
-  BuildContext get context {
-    assert(_context != null);
-    return _context!;
-  }
-
-  void attach(BuildContext context) {
-    if(_context!=null){
-      detach();
-    }
-    _context = context;
-  }
-
-  @mustCallSuper
-  void detach() {
-    _context = null;
-  }
-
-  TolyMessageStyleTheme get effectTheme {
-    bool isDark = Theme.of(context).brightness == Brightness.dark;
-
-    TolyMessageStyleTheme? theme = Theme.of(context).extension<TolyMessageStyleTheme>();
-    if (theme == null) {
-      return isDark
-          ? TolyMessageStyleTheme.tolyuiDark()
-          : TolyMessageStyleTheme.tolyuiLight();
-    }
-    return theme;
-  }
-}
-
+// 通过 on 关键字指定了它是基于 ContextAttachable 的。
+// 这意味着 MessageMixin 可以访问和扩展 ContextAttachable 中定义的内容。
 mixin MessageMixin on ContextAttachable {
   final MessageTaskManager _taskManager = MessageTaskManager();
 
-  // static Map<Brightness, TolyMessageStyleTheme> themeData = {
-  //   Brightness.light: TolyMessageStyleTheme.tolyuiLight(),
-  //   Brightness.dark: TolyMessageStyleTheme.tolyuiDark(),
+  // static Map<Brightness, MessageStyleTheme> themeData = {
+  //   Brightness.light: MessageStyleTheme.uiLight(),
+  //   Brightness.dark: MessageStyleTheme.uiDark(),
   // };
   //
-  // TolyMessageStyleTheme _theme = themeData[Brightness.light]!;
+  // MessageStyleTheme _theme = themeData[Brightness.light]!;
   //
-  // TolyMessageStyleTheme get theme => _theme;
+  // MessageStyleTheme get theme => _theme;
   //
   // void changeBrightness(Brightness brightness) {
   //   _theme = themeData[brightness]!;
@@ -63,7 +32,7 @@ mixin MessageMixin on ContextAttachable {
     Offset? offset,
     double? gap,
   }) {
-    TolyMessageStyleTheme theme = effectTheme;
+    MessageStyleTheme theme = effectTheme;
     Color backgroundColor = theme.infoStyle.backgroundColor;
     Color borderColor = theme.infoStyle.borderColor;
     Color foregroundColor = theme.infoStyle.foregroundColor;
@@ -99,7 +68,7 @@ mixin MessageMixin on ContextAttachable {
     Offset? offset,
     double? gap,
   }) {
-    TolyMessageStyleTheme theme = effectTheme;
+    MessageStyleTheme theme = effectTheme;
 
     Color backgroundColor = theme.warningStyle.backgroundColor;
     Color foregroundColor = theme.warningStyle.foregroundColor;
@@ -136,7 +105,7 @@ mixin MessageMixin on ContextAttachable {
     Offset? offset,
     double? gap,
   }) {
-    TolyMessageStyleTheme theme = effectTheme;
+    MessageStyleTheme theme = effectTheme;
     Color backgroundColor = theme.successStyle.backgroundColor;
     Color foregroundColor = theme.successStyle.foregroundColor;
     Color borderColor = theme.successStyle.borderColor;
@@ -161,7 +130,6 @@ mixin MessageMixin on ContextAttachable {
     );
   }
 
-
   void error({
     String? message,
     InlineSpan? richMessage,
@@ -173,7 +141,7 @@ mixin MessageMixin on ContextAttachable {
     Offset? offset,
     double? gap,
   }) {
-    TolyMessageStyleTheme theme = effectTheme;
+    MessageStyleTheme theme = effectTheme;
 
     Color backgroundColor = theme.errorStyle.backgroundColor;
     Color foregroundColor = theme.errorStyle.foregroundColor;

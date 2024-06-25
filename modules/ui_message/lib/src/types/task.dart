@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../../ui_message.dart';
-import '../widget/overlay/message_overlay.dart';
-import '../widget/overlay/notice_overlay.dart';
+import 'package:ui_message/ui_message.dart';
 
 typedef Task = Future<void> Function();
 

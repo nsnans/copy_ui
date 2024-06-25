@@ -1,14 +1,9 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:ui_message/ui_message.dart';
 
-import '../../../ui_message.dart';
-import '../../widget/panel/notification_panel.dart';
-import '../message/message_manager.dart';
-import '../message/message_mixin.dart';
-import 'notification_manager.dart';
+part 'type.dart';
 
 mixin NotificationMixin on ContextAttachable {
-
   final NotificationTaskManager _taskManager = NotificationTaskManager();
 
   void infoNotice({
@@ -20,7 +15,7 @@ mixin NotificationMixin on ContextAttachable {
     Offset? offset,
     double? gap,
   }) {
-    TolyMessageStyleTheme theme = effectTheme;
+    MessageStyleTheme theme = effectTheme;
     Color foregroundColor = theme.infoStyle.foregroundColor;
     IconData icon = theme.infoStyle.icon;
 
@@ -48,7 +43,7 @@ mixin NotificationMixin on ContextAttachable {
     Offset offset = const Offset(16, 16),
     double gap = 12,
   }) {
-    TolyMessageStyleTheme theme = effectTheme;
+    MessageStyleTheme theme = effectTheme;
     Color foregroundColor = theme.warningStyle.foregroundColor;
     IconData icon = theme.warningStyle.icon;
 
@@ -75,7 +70,7 @@ mixin NotificationMixin on ContextAttachable {
     Offset offset = const Offset(16, 16),
     double gap = 12,
   }) {
-    TolyMessageStyleTheme theme = effectTheme;
+    MessageStyleTheme theme = effectTheme;
     Color foregroundColor = theme.successStyle.foregroundColor;
     IconData icon = theme.successStyle.icon;
 
@@ -103,7 +98,7 @@ mixin NotificationMixin on ContextAttachable {
     Offset offset = const Offset(16, 16),
     double gap = 12,
   }) {
-    TolyMessageStyleTheme theme = effectTheme;
+    MessageStyleTheme theme = effectTheme;
     Color foregroundColor = theme.errorStyle.foregroundColor;
     IconData icon = theme.errorStyle.icon;
 

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
-import '../../model/position.dart';
+import 'package:ui_message/ui_message.dart';
 
-class TolyMessageShowTheme extends ThemeExtension<TolyMessageShowTheme> {
+class MessageShowTheme extends ThemeExtension<MessageShowTheme> {
   final Duration? duration;
   final Duration? animaDuration;
   final MessagePosition? messagePosition;
@@ -11,7 +11,7 @@ class TolyMessageShowTheme extends ThemeExtension<TolyMessageShowTheme> {
   final Offset? offset;
   final double? gap;
 
-  const TolyMessageShowTheme({
+  const MessageShowTheme({
     this.duration,
     this.animaDuration,
     this.messagePosition,
@@ -21,18 +21,18 @@ class TolyMessageShowTheme extends ThemeExtension<TolyMessageShowTheme> {
     this.gap,
   });
 
-  TolyMessageShowTheme.tolyui({
-    this.duration = const  Duration(seconds: 3),
-    this.animaDuration= const  Duration(milliseconds: 250),
+  MessageShowTheme.ui({
+    this.duration = const Duration(seconds: 3),
+    this.animaDuration = const Duration(milliseconds: 250),
     this.messagePosition = MessagePosition.top,
     this.noticePosition = NoticePosition.topRight,
-    this.offset = const Offset(0,16),
-    this.noticeOffset = const Offset(16,16),
+    this.offset = const Offset(0, 16),
+    this.noticeOffset = const Offset(16, 16),
     this.gap = 12,
   });
 
   @override
-  TolyMessageShowTheme copyWith({
+  MessageShowTheme copyWith({
     Duration? duration,
     Duration? animaDuration,
     NoticePosition? noticePosition,
@@ -41,7 +41,7 @@ class TolyMessageShowTheme extends ThemeExtension<TolyMessageShowTheme> {
     Offset? noticeOffset,
     double? gap,
   }) {
-    return TolyMessageShowTheme(
+    return MessageShowTheme(
       duration: duration ?? this.duration,
       animaDuration: animaDuration ?? this.animaDuration,
       messagePosition: messagePosition ?? this.messagePosition,
@@ -53,6 +53,5 @@ class TolyMessageShowTheme extends ThemeExtension<TolyMessageShowTheme> {
   }
 
   @override
-  TolyMessageShowTheme lerp(TolyMessageShowTheme? other, double t) => this;
+  MessageShowTheme lerp(MessageShowTheme? other, double t) => this;
 }
-

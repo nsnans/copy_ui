@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:ui_message/ui_message.dart';
 
-import '../logic/message.dart';
-
-class TolyMessage extends StatefulWidget {
+class BMessage extends StatefulWidget {
   final Widget child;
   final MessageHandler? handler;
   final ThemeData? theme;
@@ -11,7 +10,7 @@ class TolyMessage extends StatefulWidget {
   final Locale? locale;
   final Iterable<LocalizationsDelegate<dynamic>>? localizationsDelegates;
 
-  const TolyMessage({
+  const BMessage({
     super.key,
     required this.child,
     this.handler,
@@ -23,20 +22,22 @@ class TolyMessage extends StatefulWidget {
   });
 
   @override
-  State<TolyMessage> createState() => TolyMessageState();
+  State<BMessage> createState() => BMessageState();
 }
 
-class TolyMessageState extends State<TolyMessage> {
+class BMessageState extends State<BMessage> {
   late MessageHandler handler;
 
   @override
   void initState() {
-    handler = widget.handler ?? $message;
+    // init，添加处理逻辑
+    handler = widget.handler ?? modal;
     super.initState();
   }
 
   @override
   void dispose() {
+    // app销毁，取消掉
     handler.detach();
     super.dispose();
   }
@@ -52,9 +53,10 @@ class TolyMessageState extends State<TolyMessage> {
       localizationsDelegates: widget.localizationsDelegates,
       home: Builder(
         builder: (context) {
+          // 传递content
           handler.attach(context);
           return widget.child;
-        }
+        },
       ),
     );
   }

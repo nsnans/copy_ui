@@ -1,9 +1,4 @@
-import 'package:flutter/material.dart';
-
-import '../../../ui_message.dart';
-import '../../model/task.dart';
-import '../../widget/overlay/notice_overlay.dart';
-import '../message/message_manager.dart';
+part of 'notification_mixin.dart';
 
 class NotificationTaskManager {
   final Map<NoticePosition, List<NoticeTask>> _taskPool = {};
@@ -27,18 +22,19 @@ class NotificationTaskManager {
     required BuildContext context,
     Duration? duration,
     Duration? animaDuration,
-    NoticePosition? position ,
-    Offset? offset ,
+    NoticePosition? position,
+    Offset? offset,
     double? gap,
   }) {
-
     // 根据主题获取默认数据
-    TolyMessageShowTheme? theme = Theme.of(context).extension<TolyMessageShowTheme>();
-    duration = duration?? theme?.duration ?? const Duration(seconds: 3);
-    animaDuration = animaDuration?? theme?.animaDuration??  const Duration(milliseconds: 250);
-    position = position?? theme?.noticePosition?? NoticePosition.topRight;
-    gap = gap?? theme?.gap?? 12;
-    offset = offset?? theme?.noticeOffset?? const Offset(16, 16);
+    MessageShowTheme? theme = Theme.of(context).extension<MessageShowTheme>();
+    duration = duration ?? theme?.duration ?? const Duration(seconds: 3);
+    animaDuration = animaDuration ??
+        theme?.animaDuration ??
+        const Duration(milliseconds: 250);
+    position = position ?? theme?.noticePosition ?? NoticePosition.topRight;
+    gap = gap ?? theme?.gap ?? 12;
+    offset = offset ?? theme?.noticeOffset ?? const Offset(16, 16);
 
     NoticeTask task = NoticeTask(() => Future.delayed(duration!), position);
     double y = endY(offset.dy - gap, position);
