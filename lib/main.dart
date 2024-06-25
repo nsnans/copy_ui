@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:ui_dropdown_menu/ui_dropdown_menu.dart';
 import 'package:ui_message/ui_message.dart';
+import 'package:ui_popover/ui_popover.dart';
 
 void main() {
   runApp(BMessage(child: MyApp()));
@@ -41,59 +43,115 @@ class _MyHomePageState extends State<MyHomePage> {
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[MessageDemo1()],
+          children: <Widget>[DropMenuDemo4()],
         ),
       ),
     );
   }
 }
 
-class MessageDemo1 extends StatelessWidget {
-  const MessageDemo1({super.key});
+extension DarkTheme on BuildContext {
+  bool get isDark => Theme.of(this).brightness == Brightness.dark;
+}
+
+class DropMenuDemo4 extends StatelessWidget {
+  const DropMenuDemo4({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Wrap(
-      crossAxisAlignment: WrapCrossAlignment.center,
-      spacing: 20,
-      runSpacing: 10,
-      children: [display1(), display2(), display3()],
-    );
-  }
-
-  Widget display1() {
-    return ElevatedButton(
-      child: Text(
-        'Show Message Top',
+    return SizedBox(
+      width: 360,
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Row(
+            children: [
+              Expanded(child: buildDisplay(Placement.topStart)),
+              Expanded(child: buildDisplay(Placement.top)),
+              Expanded(child: buildDisplay(Placement.topEnd)),
+            ],
+          ),
+          const SizedBox(
+            height: 10,
+          ),
+          Row(
+            children: [
+              Expanded(child: buildDisplay(Placement.leftStart)),
+              Expanded(child: buildDisplay(Placement.left)),
+              Expanded(child: buildDisplay(Placement.leftEnd)),
+            ],
+          ),
+          const SizedBox(
+            height: 10,
+          ),
+          Row(
+            children: [
+              Expanded(child: buildDisplay(Placement.rightStart)),
+              Expanded(child: buildDisplay(Placement.right)),
+              Expanded(child: buildDisplay(Placement.rightEnd)),
+            ],
+          ),
+          const SizedBox(
+            height: 10,
+          ),
+          Row(
+            children: [
+              Expanded(child: buildDisplay(Placement.bottomStart)),
+              Expanded(child: buildDisplay(Placement.bottom)),
+              Expanded(child: buildDisplay(Placement.bottomEnd)),
+            ],
+          ),
+        ],
       ),
-      onPressed: () {
-        modal.info(message: 'This is a common message.');
-      },
     );
   }
 
-  Widget display2() {
-    return ElevatedButton(
-      child: Text('Show Message Bottom'),
-      onPressed: () {
-        modal.info(
-          message: 'This is a common message.',
-          position: MessagePosition.bottom,
-        );
-      },
+  Widget buildDisplay(Placement placement) {
+    String buttonText = _nameMap[placement]!;
+    return Center(
+      child: Builder(builder: (context) {
+        Color bgColor = context.isDark ? const Color(0xff303133) : Colors.white;
+        return TolyDropMenu(
+            onSelect: onSelect,
+            placement: placement,
+            decorationConfig:
+                DecorationConfig(isBubble: false, backgroundColor: bgColor),
+            offsetCalculator: (c) => menuOffsetCalculator(c, shift: 6),
+            menuItems: [
+              ActionMenu(const MenuMeta(router: '01', label: '1st menu item')),
+              ActionMenu(const MenuMeta(router: '02', label: '2nd menu item'),
+                  enable: false),
+              ActionMenu(const MenuMeta(router: '03', label: '3rd menu item')),
+              const DividerMenu(),
+              ActionMenu(const MenuMeta(router: '04', label: '4ur menu item')),
+            ],
+            width: 140,
+            childBuilder: (_, ctrl, __) {
+              return ElevatedButton(
+                child: Text(buttonText),
+                onPressed: ctrl.open,
+              );
+            });
+      }),
     );
   }
 
-  Widget display3() {
-    InlineSpan span = const TextSpan(children: [
-      TextSpan(text: '请通过此邮箱联系我 '),
-      TextSpan(style: TextStyle(color: Colors.blue), text: '1981462002@qq.com ')
-    ]);
-    return ElevatedButton(
-      onPressed: () {
-        modal.info(richMessage: span);
-      },
-      child: Text('富文本'),
-    );
+  static const Map<Placement, String> _nameMap = {
+    Placement.top: 'Top',
+    Placement.topStart: 'TStart',
+    Placement.topEnd: 'TEnd',
+    Placement.bottomEnd: 'BEnd',
+    Placement.bottom: 'Bottom',
+    Placement.bottomStart: 'BStart',
+    Placement.rightEnd: 'REnd',
+    Placement.right: 'Right',
+    Placement.rightStart: 'RStart',
+    Placement.leftEnd: 'LEnd',
+    Placement.left: 'Left',
+    Placement.leftStart: 'LStart',
+  };
+
+  void onSelect(MenuMeta menu) {
+    modal.success(message: '点击了 [${menu.label}] 个菜单');
   }
 }
