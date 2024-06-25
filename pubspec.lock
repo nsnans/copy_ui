@@ -227,6 +227,13 @@ packages:
       relative: true
     source: path
     version: "0.0.1"
+  ui_tree_menu:
+    dependency: "direct main"
+    description:
+      path: "modules/ui_menu/ui_tree_menu"
+      relative: true
+    source: path
+    version: "0.0.1"
   ui_util:
     dependency: transitive
     description:
